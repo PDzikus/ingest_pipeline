@@ -1,0 +1,12 @@
+[tool.poetry]
+name = "ingest_pipeline"
+version = "1.0.0"
+description = ""
+authors = ["Paweł Wiszniewski <pawel.wiszniewski@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "~3.8"
+
+[tool.poetry.dev-dependencies]
+black = "21.6b0"
+pytest = "6.2.4"
