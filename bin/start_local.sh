@@ -1,3 +1,3 @@
-#/bin/bash
+#!/bin/bash
 
-docker-compose -f infrastructure/local/stack.yml up
+docker-compose -f infrastructure/local/stack.yml up -d
