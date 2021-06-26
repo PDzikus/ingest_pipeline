@@ -1,0 +1,45 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Event",
+  "description": "Event with user e-mail and phone",
+  "type": "object",
+
+  "properties": {
+
+    "event_type": {
+      "description": "Type of event logged - there might be some documentation for it somewhere :)",
+      "type": "integer"
+    },
+
+    "event_time": {
+      "description": "Event generation timestamp",
+      "type": "string",
+      "format": "date-time"
+    },
+
+    "processing_date": {
+      "description": "Date when event was processed by the system",
+      "type": "string",
+      "format": "date"
+    },
+
+    "data": {
+      "type": "object",
+      "properties": {
+
+        "user_email": {
+          "type": "string",
+          "format": "email"
+        },
+
+        "phone_number": {
+          "type": "string",
+          "pattern": "\\d*"
+        }
+      }
+    }
+  },
+  "required": [
+    "event_type", "event_time", "data", "processing_date"
+  ]
+}
