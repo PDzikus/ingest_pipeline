@@ -2,7 +2,7 @@
 import json
 from typing import Dict
 import pytest
-import main.file_processor
+from main.file_processor import events_from_file
 
 records = [
     {
@@ -41,7 +41,7 @@ def schema() -> Dict[str, str]:
 
 def test_file_iterator(schema):
     file_path = "testing_data.json"
-    file_iterator = main.file_processor.data_from_file(file_path, schema)
+    file_iterator = events_from_file(file_path, schema)
     output = list(file_iterator)
     assert len(output) == 4
     for record in output:

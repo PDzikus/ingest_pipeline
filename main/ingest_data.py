@@ -11,18 +11,30 @@ from main.postgres_loader import PostgresLoader
 
 
 def main(argv: Optional[List[str]] = None) -> None:
+    root = logging.getLogger()
+    root.setLevel(logging.DEBUG)
+
+    handler = logging.StreamHandler(sys.stdout)
+    handler.setLevel(logging.DEBUG)
+    formatter = logging.Formatter(
+        "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    )
+    handler.setFormatter(formatter)
+    root.addHandler(handler)
+
     logger = logging.getLogger("ingest_data")
+
     args = parse_arguments(argv)
     schema = load_schema(args.schema_file)
     if not os.path.isfile(args.input_file):
         logger.error("Input file can't be accessed: %s", args.input_file)
         exit(1)
-    data_iterator = file_processor.data_from_file(
+    event_iterator = file_processor.events_from_file(
         file_name=args.input_file, schema=schema
     )
     loader = PostgresLoader()
     logger.info("Loading data into PostgreSQL")
-    loader.load_data(data_rows=data_iterator)
+    loader.load_data(data_source=event_iterator)
     logger.info("Finished loading data into PostgresSQL")
 
 

@@ -20,7 +20,7 @@
     "processing_date": {
       "description": "Date when event was processed by the system",
       "type": "string",
-      "format": "date"
+      "pattern": "^\\d{1,4}-\\d{1,2}-\\d{1,2}"
     },
 
     "data": {

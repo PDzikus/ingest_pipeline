@@ -4,7 +4,7 @@ from typing import Dict
 
 import pytest
 
-from main.file_processor import is_record_valid
+from main.event_tools import is_event_valid
 
 record = {
     "event_type": 1,
@@ -22,4 +22,4 @@ def schema() -> Dict[str, str]:
 
 
 def test_validate_record(schema: Dict[str, str]) -> None:
-    assert is_record_valid(record, schema)
+    assert is_event_valid(record, schema)
