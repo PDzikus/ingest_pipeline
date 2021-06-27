@@ -4,7 +4,7 @@ from typing import Dict
 
 import pytest
 
-from main.ingester import is_record_valid
+from main.file_processor import is_record_valid
 
 record = {
     "event_type": 1,
@@ -16,10 +16,10 @@ record = {
 
 @pytest.fixture
 def schema() -> Dict[str, str]:
-    with open("../src/main/schema.json", "r") as schema_file:
+    with open("../data/schema.json", "r") as schema_file:
         schema = json.load(schema_file)
     return schema
 
 
-def test_validate_record(schema):
+def test_validate_record(schema: Dict[str, str]) -> None:
     assert is_record_valid(record, schema)
