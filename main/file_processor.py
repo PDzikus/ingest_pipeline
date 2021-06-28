@@ -10,16 +10,16 @@ import json
 import logging
 from json import JSONDecodeError
 from typing import Dict, Any, Iterator, Optional
-from event_tools import is_event_valid
+from event_specification import EventSpecification
 
 
 def events_from_file(
-    file_name: str, schema: Dict[str, str]
+    file_name: str, event_spec: EventSpecification
 ) -> Iterator[Dict[str, Any]]:
     logger = logging.getLogger("file_processor")
     with open(file_name) as source_file:
         for num, line in enumerate(source_file, 1):
-            event = _process_line(line, schema)
+            event = _process_line(line, event_spec)
             if event is None:
                 logger.error("Incorrect event format in line %s: %s", num, line)
                 continue
@@ -27,14 +27,16 @@ def events_from_file(
                 yield event
 
 
-def _process_line(line: str, schema: Dict[str, str]) -> Optional[Dict[str, Any]]:
+def _process_line(
+    line: str, event_spec: EventSpecification
+) -> Optional[Dict[str, Any]]:
     """Line convertion to dict and validation."""
     if line is not None:
         try:
             record = json.loads(line)
         except JSONDecodeError:
             return None
-        if is_event_valid(record, schema):
+        if event_spec.is_event_valid(record):
             return record
         else:
             return None

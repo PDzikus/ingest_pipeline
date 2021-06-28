@@ -1,7 +1,7 @@
 """Tests for file processing."""
-import json
-from typing import Dict
 import pytest
+
+from event_specification import EventSpecification
 from main.file_processor import events_from_file
 
 records = [
@@ -33,15 +33,13 @@ records = [
 
 
 @pytest.fixture
-def schema() -> Dict[str, str]:
-    with open("../data/schema.json", "r") as schema_file:
-        schema = json.load(schema_file)
-    return schema
+def event_spec() -> EventSpecification:
+    return EventSpecification("../data/schema.json")
 
 
-def test_file_iterator(schema):
+def test_file_iterator(event_spec: EventSpecification):
     file_path = "testing_data.json"
-    file_iterator = events_from_file(file_path, schema)
+    file_iterator = events_from_file(file_path, event_spec)
     output = list(file_iterator)
     assert len(output) == 4
     for record in output:
