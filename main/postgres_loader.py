@@ -2,7 +2,7 @@
 import io
 import logging
 from typing import Dict, Iterator, Any
-import event_specification
+from event_specification import EventSpecification
 import psycopg2
 
 
@@ -24,7 +24,7 @@ class PostgresLoader:
         """Creates table with a specified name."""
         self.logger.info("Creating table %s.", table_name)
         with self.connection.cursor() as cursor:
-            cursor.execute(event_specification.table_creation_schema(table_name))
+            cursor.execute(EventSpecification.table_creation_sql(table_name))
         self.logger.info("Table created.")
 
     def load_data(self, data_source: Iterator[Dict[str, Any]]):
@@ -34,7 +34,7 @@ class PostgresLoader:
         self.logger.info("Starting data load")
         with self.connection.cursor() as cursor:
             data_string_iterator = StringIteratorIO(
-                (event.event_to_csv_line(event) for event in data_source)
+                (EventSpecification.event_to_csv_line(event) for event in data_source)
             )
             cursor.copy_from(data_string_iterator, table_name, sep="|")
 

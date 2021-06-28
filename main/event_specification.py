@@ -49,7 +49,7 @@ class EventSpecification:
                 """
 
     @staticmethod
-    def to_csv_line(event: Dict[str, Any]) -> str:
+    def event_to_csv_line(event: Dict[str, Any]) -> str:
         """Maps event record to a CSV format with '|' separator.
 
         This method is not connected to schema in any way, if schema changes, this must be applied manually.
