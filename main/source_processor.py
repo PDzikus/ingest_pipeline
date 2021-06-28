@@ -9,19 +9,20 @@ This should work as a generator as a data source for database loader.
 import json
 import logging
 from json import JSONDecodeError
-from typing import Dict, Any, Iterator, Optional
-from event_specification import EventSpecification
+from typing import Iterator, Optional
+from model.event import Event
 
 
 class SourceProcessor:
     """Class delivering iterators for event objects (dict)."""
 
-    def __init__(self, event_spec: EventSpecification):
-        self.event_spec = event_spec
+    def __init__(self):
         self.logger = logging.getLogger(self.__class__.__name__)
+        self.records_count = 0
 
-    def iterator_from_file(self, file_name: str) -> Iterator[Dict[str, Any]]:
+    def iterator_from_file(self, file_name: str) -> Iterator[Event]:
         """Creates iterator of event dict objects read from file."""
+        self.records_count = 0
         with open(file_name) as source_file:
             for num, line in enumerate(source_file, 1):
                 event = self._process_line(line)
@@ -31,16 +32,14 @@ class SourceProcessor:
                     )
                     continue
                 else:
+                    self.records_count = self.records_count + 1
                     yield event
 
-    def _process_line(self, line: str) -> Optional[Dict[str, Any]]:
-        """Converts string to dict and validates it against event specification."""
+    def _process_line(self, line: str) -> Optional[Event]:
+        """Converts string to json and maps it to Even class."""
         if line is not None:
             try:
                 record = json.loads(line)
             except JSONDecodeError:
                 return None
-            if self.event_spec.is_event_valid(record):
-                return record
-            else:
-                return None
+            return Event.from_json_object(record)

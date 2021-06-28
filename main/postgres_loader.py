@@ -1,9 +1,10 @@
 """PostgreSQL loader."""
 import io
 import logging
-from typing import Dict, Iterator, Any
-from event_specification import EventSpecification
+from typing import Iterator
 import psycopg2
+
+from model.event import Event
 
 
 class PostgresLoader:
@@ -12,6 +13,7 @@ class PostgresLoader:
     # TODO: initialize based on configuration. Pass shouldn't be in code btw.
     def __init__(self):
         self.logger = logging.getLogger(self.__class__.__name__)
+        self.table_name = "staging"
         self.connection = psycopg2.connect(
             host="localhost",
             database="local_db",
@@ -20,22 +22,21 @@ class PostgresLoader:
         )
         self.connection.autocommit = True
 
-    def create_table(self, table_name: str) -> None:
+    def create_staging_table(self) -> None:
         """Creates table with a specified name."""
-        self.logger.info("Creating table %s.", table_name)
+        self.logger.info("Creating table %s.", self.table_name)
         with self.connection.cursor() as cursor:
-            cursor.execute(EventSpecification.table_creation_sql(table_name))
+            cursor.execute(Event.staging_table_creation_sql(self.table_name))
 
-    def load_data(self, data_source: Iterator[Dict[str, Any]]):
+    def load_data(self, data_source: Iterator[Event]) -> None:
         """Loads data from Iterator to database."""
-        table_name = "staging"
-        self.create_table(table_name)
+        self.create_staging_table()
         self.logger.info("Starting data load")
         with self.connection.cursor() as cursor:
             data_string_iterator = StringIteratorIO(
-                (EventSpecification.event_to_csv_line(event) for event in data_source)
+                (event.to_csv_row() for event in data_source)
             )
-            cursor.copy_from(data_string_iterator, table_name, sep="|")
+            cursor.copy_from(data_string_iterator, self.table_name, sep="|")
 
 
 class StringIteratorIO(io.TextIOBase):

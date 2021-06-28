@@ -1,10 +1,9 @@
 """Tests for data load and validation."""
 import json
 from typing import Dict, Any, List
-
 import pytest
-
-from main.event_specification import EventSpecification
+from model.event import Event
+from datetime import datetime
 
 
 @pytest.fixture
@@ -16,23 +15,24 @@ def invalid_records() -> List[Dict[str, Any]]:
     return records
 
 
-@pytest.fixture
-def event_spec() -> EventSpecification:
-    return EventSpecification("../main/schema/schema.json")
-
-
-def test_validate_record(event_spec: EventSpecification) -> None:
+def test_validate_record() -> None:
     record = {
         "event_type": 1,
         "event_time": "2019-03-10 15:59:08",
         "data": {"user_email": "YINPgIQkZkh@gmail.com", "phone_number": "8923626200"},
         "processing_date": "2019-03-10",
     }
-    assert event_spec.is_event_valid(record)
+    result = Event.from_json_object(record)
+    assert result is not None
+    assert result.event_type == 1
+    assert result.event_time == datetime.strptime(
+        "2019-03-10 15:59:08", "%Y-%m-%d %H:%M:%S"
+    )
+    assert result.user_email == "YINPgIQkZkh@gmail.com"
+    assert result.phone_number == "8923626200"
+    assert result.processing_date == datetime.strptime("2019-03-10", "%Y-%m-%d").date()
 
 
-def test_invalid_records(
-    event_spec: EventSpecification, invalid_records: List[Dict[str, Any]]
-) -> None:
+def test_invalid_records(invalid_records: List[Dict[str, Any]]) -> None:
     for record in invalid_records:
-        assert not event_spec.is_event_valid(record)
+        assert Event.from_json_object(record) is None
