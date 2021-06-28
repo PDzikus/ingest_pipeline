@@ -31,7 +31,7 @@ def test_validate_record(event_spec: EventSpecification) -> None:
     assert event_spec.is_event_valid(record)
 
 
-def ignore_test_invalid_records(
+def test_invalid_records(
     event_spec: EventSpecification, invalid_records: List[Dict[str, Any]]
 ) -> None:
     for record in invalid_records:

@@ -14,7 +14,7 @@
     "event_time": {
       "description": "Event generation timestamp",
       "type": "string",
-      "format": "date-time"
+      "pattern": "\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}"
     },
 
     "processing_date": {
@@ -29,7 +29,7 @@
 
         "user_email": {
           "type": "string",
-          "format": "email"
+          "pattern": "^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$"
         },
 
         "phone_number": {
@@ -40,6 +40,6 @@
     }
   },
   "required": [
-    "event_type", "event_time", "data", "processing_date"
+    "event_type", "event_time", "data.phone_number", "data.user_email", "processing_date"
   ]
 }
