@@ -19,7 +19,7 @@ class SourceProcessor:
     def __init__(self, event_spec: EventSpecification):
         self.event_spec = event_spec
 
-    def from_file(self, file_name: str) -> Iterator[Dict[str, Any]]:
+    def iterator_from_file(self, file_name: str) -> Iterator[Dict[str, Any]]:
         """Creates iterator of event dict objects read from file."""
         with open(file_name) as source_file:
             for num, line in enumerate(source_file, 1):
