@@ -1,6 +1,6 @@
-{"note": "incorrect processing_date", "event_type": 1, "event_time": "2019-03-10 15:59:08", "data": {"user_email": "YINPgIQkZkh@gmail.com", "phone_number": "8923626200"}, "processing_date": "2019-03"}
-{"note": "incorrect event_type", "event_type": "1", "event_time": "2019-03-10 15:59:08", "data": {"user_email": "YINPgIQkZkh@gmail.com", "phone_number": "8923626200"}, "processing_date": "2019-03-10"}
-{"note": "incorect event_time", "event_type": 1, "event_time": "2019-03-10", "data": {"user_email": "YINPgIQkZkh@gmail.com", "phone_number": "8923626200"}, "processing_date": "2019-03-10"}
+{"note": "incorrect (too short) processing_date", "event_type": 1, "event_time": "2019-03-10 15:59:08", "data": {"user_email": "YINPgIQkZkh@gmail.com", "phone_number": "8923626200"}, "processing_date": "2019-03"}
+{"note": "incorrect (string) event_type", "event_type": "1", "event_time": "2019-03-10 15:59:08", "data": {"user_email": "YINPgIQkZkh@gmail.com", "phone_number": "8923626200"}, "processing_date": "2019-03-10"}
+{"note": "incorect (no hours) event_time", "event_type": 1, "event_time": "2019-03-10", "data": {"user_email": "YINPgIQkZkh@gmail.com", "phone_number": "8923626200"}, "processing_date": "2019-03-10"}
 {"note": "incorrect data.user_email", "event_type": 1, "event_time": "2019-03-10 15:59:08", "data": {"user_email": "YINPgIQkZkh", "phone_number": "8923626200"}, "processing_date": "2019-03-10"}
 {"note": "incorrect data.phone_number", "event_type": 1, "event_time": "2019-03-10 15:59:08", "data": {"user_email": "YINPgIQkZkh@gmail.com", "phone_number": "+48 8923626200"}, "processing_date": "2019-03-10"}
 {"note": "missing processing_date", "event_type": 1, "event_time": "2019-03-10 15:59:08", "data": {"user_email": "YINPgIQkZkh@gmail.com", "phone_number": "8923626200"}}
@@ -8,3 +8,8 @@
 {"note": "missing data.user_email", "event_type": 1, "event_time": "2019-03-10 15:59:08", "data": {"phone_number": "8923626200"}, "processing_date": "2019-03-10"}
 {"note": "missing event_time", "event_type": 1, "data": {"user_email": "YINPgIQkZkh@gmail.com", "phone_number": "8923626200"}, "processing_date": "2019-03-10"}
 {"note": "missing event_type", "event_time": "2019-03-10 15:59:08", "data": {"user_email": "YINPgIQkZkh@gmail.com", "phone_number": "8923626200"}, "processing_date": "2019-03-10"}
+{"note": "incorrect (add chars) processing_date", "event_type": 1, "event_time": "2019-03-10 15:59:08", "data": {"user_email": "YINPgIQkZkh@gmail.com", "phone_number": "8923626200"}, "processing_date": "2019-03-1522"}
+{"note": "incorrect (float) event_type", "event_type": 1.1, "event_time": "2019-03-10 15:59:08", "data": {"user_email": "YINPgIQkZkh@gmail.com", "phone_number": "8923626200"}, "processing_date": "2019-03-10"}
+{"note": "incorect (add timezone) event_time", "event_type": 1, "event_time": "2019-03-10 15:59:08Z+1", "data": {"user_email": "YINPgIQkZkh@gmail.com", "phone_number": "8923626200"}, "processing_date": "2019-03-10"}
+{"note": "incorrect (two @) data.user_email", "event_type": 1, "event_time": "2019-03-10 15:59:08", "data": {"user_email": "YINPgIQkZkh@asda@vc", "phone_number": "8923626200"}, "processing_date": "2019-03-10"}
+{"note": "incorrect (added brackets) data.phone_number", "event_type": 1, "event_time": "2019-03-10 15:59:08", "data": {"user_email": "YINPgIQkZkh@gmail.com", "phone_number": "(8923)626200"}, "processing_date": "2019-03-10"}

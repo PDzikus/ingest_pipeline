@@ -14,13 +14,13 @@
     "event_time": {
       "description": "Event generation timestamp",
       "type": "string",
-      "pattern": "\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}"
+      "pattern": "^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}$"
     },
 
     "processing_date": {
       "description": "Date when event was processed by the system",
       "type": "string",
-      "pattern": "^\\d{1,4}-\\d{1,2}-\\d{1,2}"
+      "pattern": "^\\d{1,4}-\\d{1,2}-\\d{1,2}$"
     },
 
     "data": {
@@ -34,12 +34,13 @@
 
         "phone_number": {
           "type": "string",
-          "pattern": "\\d*"
+          "pattern": "^\\d+$"
         }
-      }
+      },
+      "required": ["user_email", "phone_number"]
     }
   },
   "required": [
-    "event_type", "event_time", "data.phone_number", "data.user_email", "processing_date"
+    "event_type", "event_time", "data", "processing_date"
   ]
 }
