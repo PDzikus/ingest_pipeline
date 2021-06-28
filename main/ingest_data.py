@@ -50,7 +50,7 @@ def validate_args(args: argparse.Namespace) -> None:
         logger.error("Input file can't be found or accessed: %s", args.input_file)
         raise FileNotFoundError
     if not os.path.isfile(args.schema_file):
-        logger.error("Input file can't be found or accessed: %s", args.schema_file)
+        logger.error("Schema file can't be found or accessed: %s", args.schema_file)
         raise FileNotFoundError
 
 
