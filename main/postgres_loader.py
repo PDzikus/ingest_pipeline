@@ -25,7 +25,6 @@ class PostgresLoader:
         self.logger.info("Creating table %s.", table_name)
         with self.connection.cursor() as cursor:
             cursor.execute(EventSpecification.table_creation_sql(table_name))
-        self.logger.info("Table created.")
 
     def load_data(self, data_source: Iterator[Dict[str, Any]]):
         """Loads data from Iterator to database."""

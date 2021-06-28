@@ -1,7 +1,6 @@
 """Event related functions."""
 import json
 import logging
-import os
 from typing import Dict, Any
 import jsonschema
 
@@ -15,10 +14,8 @@ class EventSpecification:
         :param schema_path: string with the path to the schema file - as defined by JSON Schema format
                             https://json-schema.org/
         """
-        logging.info("Loading schema file: %s", schema_path)
-        if not os.path.isfile(schema_path):
-            logging.error("Input file can't be found or accessed: %s", schema_path)
-            raise FileNotFoundError
+        self.logger = logging.getLogger(self.__class__.__name__)
+        self.logger.info("Loading schema file: %s", schema_path)
         with open(schema_path, "r") as schema_file:
             self.schema = json.load(schema_file)
 
@@ -27,7 +24,7 @@ class EventSpecification:
         try:
             jsonschema.validate(event, self.schema)
         except jsonschema.exceptions.ValidationError as error:
-            logging.debug(error)
+            self.logger.debug(error)
             return False
         return True
 
