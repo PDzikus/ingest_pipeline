@@ -34,7 +34,7 @@ records = [
 
 @pytest.fixture
 def event_spec() -> EventSpecification:
-    return EventSpecification("../data/schema.json")
+    return EventSpecification("../main/schema/schema.json")
 
 
 def test_file_iterator(event_spec: EventSpecification):

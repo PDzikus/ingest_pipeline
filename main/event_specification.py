@@ -35,7 +35,7 @@ class EventSpecification:
     def table_creation_sql(table_name: str) -> str:
         """Produced SQL string for PostgreSQL to create table for current event definition.
 
-        This method is not connected to schema in any way, if schema changes, this must be applied manually.
+        This method is not connected to schema in any way, if schema changes, this change must be applied manually.
         """
         return f"""DROP TABLE IF EXISTS {table_name};
                   CREATE UNLOGGED TABLE {table_name} (
@@ -52,7 +52,7 @@ class EventSpecification:
     def event_to_csv_line(event: Dict[str, Any]) -> str:
         """Maps event record to a CSV format with '|' separator.
 
-        This method is not connected to schema in any way, if schema changes, this must be applied manually.
+        This method is not connected to schema in any way, if schema changes, this change must be applied manually.
         """
         return (
             "|".join(

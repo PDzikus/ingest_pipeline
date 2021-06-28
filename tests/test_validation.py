@@ -18,7 +18,7 @@ def invalid_records() -> List[Dict[str, Any]]:
 
 @pytest.fixture
 def event_spec() -> EventSpecification:
-    return EventSpecification("../data/schema.json")
+    return EventSpecification("../main/schema/schema.json")
 
 
 def test_validate_record(event_spec: EventSpecification) -> None:
