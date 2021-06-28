@@ -2,7 +2,7 @@
 import pytest
 
 from event_specification import EventSpecification
-from main.file_processor import events_from_file
+from source_processor import SourceProcessor
 
 records = [
     {
@@ -39,7 +39,8 @@ def event_spec() -> EventSpecification:
 
 def test_file_iterator(event_spec: EventSpecification):
     file_path = "testing_data.json"
-    file_iterator = events_from_file(file_path, event_spec)
+    source_processor = SourceProcessor(event_spec)
+    file_iterator = source_processor.from_file(file_path)
     output = list(file_iterator)
     assert len(output) == 4
     for record in output:

@@ -5,7 +5,7 @@ import sys
 from typing import Optional, List
 
 from event_specification import EventSpecification
-from main import file_processor
+from main import source_processor
 from main.postgres_loader import PostgresLoader
 
 
@@ -14,7 +14,7 @@ def main(argv: Optional[List[str]] = None) -> None:
     configure_logging()
 
     event_spec = EventSpecification(args.schema_file)
-    event_iterator = file_processor.events_from_file(
+    event_iterator = source_processor.events_from_file(
         file_name=args.input_file, event_spec=event_spec
     )
     loader = PostgresLoader()
