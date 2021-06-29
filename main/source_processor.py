@@ -14,15 +14,17 @@ from models.event import Event
 
 
 class SourceProcessor:
-    """Class delivering iterators for event objects (dict)."""
+    """Class for reading input data and delivering it as an iterator of event objects."""
 
     def __init__(self):
         self.logger = logging.getLogger(self.__class__.__name__)
-        self.records_count = 0
+        self.valid_records = 0
+        self.invalid_records = 0
 
     def iterator_from_file(self, file_name: str) -> Iterator[Event]:
-        """Creates iterator of event dict objects read from file."""
-        self.records_count = 0
+        """Creates iterator of event dict objects read from a file."""
+        self.valid_records = 0
+        self.invalid_records = 0
         with open(file_name) as source_file:
             for num, line in enumerate(source_file, 1):
                 event = self._process_line(line)
@@ -30,13 +32,14 @@ class SourceProcessor:
                     self.logger.error(
                         "Incorrect event format in line %s: %s", num, line
                     )
+                    self.invalid_records += 1
                     continue
                 else:
-                    self.records_count = self.records_count + 1
+                    self.valid_records += 1
                     yield event
 
     def _process_line(self, line: str) -> Optional[Event]:
-        """Converts string to json and maps it to Even class."""
+        """Converts string to json and maps it to Event class."""
         if line is not None:
             try:
                 record = json.loads(line)

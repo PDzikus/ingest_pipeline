@@ -11,22 +11,26 @@ class PostgresLoader:
     """Class responsible for PostgreSQL interaction."""
 
     # TODO: initialize based on configuration. Pass shouldn't be in code btw.
-    def __init__(self):
+    def __init__(self, host: str, database: str, user: str, password: str):
         self.logger = logging.getLogger(self.__class__.__name__)
         self.table_name = "staging"
         self.connection = psycopg2.connect(
-            host="localhost",
-            database="local_db",
-            user="local_user",
-            password="local_pass",
+            host=host, database=database, user=user, password=password
         )
         self.connection.autocommit = True
 
     def create_staging_table(self) -> None:
-        """Creates table with a specified name."""
+        """Creates staging table."""
         self.logger.info("Creating table %s.", self.table_name)
         with self.connection.cursor() as cursor:
             cursor.execute(Event.staging_table_creation_sql(self.table_name))
+
+    def count_records_in_staging_table(self) -> int:
+        """Retrieves number of records in staging table."""
+        with self.connection.cursor() as cursor:
+            cursor.execute(f"SELECT COUNT(*) FROM {self.table_name};")
+            response = cursor.fetchone()
+        return response[0]
 
     def load_data(self, data_source: Iterator[Event]) -> None:
         """Loads data from Iterator to database."""
@@ -65,7 +69,7 @@ class StringIteratorIO(io.TextIOBase):
         return ret
 
     def read(self, n=None):
-        """Reads n characters from Iterator, if n=None, reads until end of the Iterator."""
+        """Reads at max n characters from Iterator, if n=None, reads until end of the Iterator."""
         lines = []
         if n is None or n < 0:
             while True:

@@ -17,12 +17,21 @@ def main(argv: Optional[List[str]] = None) -> None:
 
     source_processor = SourceProcessor()
     event_iterator = source_processor.iterator_from_file(args.input_file)
-    db_loader = PostgresLoader()
+    db_loader = PostgresLoader(
+        host="localhost", database="local_db", user="local_user", password="local_pass"
+    )
 
     logger.info("Loading data into PostgreSQL")
     db_loader.load_data(data_source=event_iterator)
     logger.info("Finished loading data into PostgresSQL")
-    logger.info("Loaded %s records from data source.", source_processor.records_count)
+    logger.info(
+        "Loaded %s valid record(s) from data source.", source_processor.valid_records
+    )
+    logger.info("Discarded %s invalid record(s).", source_processor.invalid_records)
+    logger.info(
+        "Count of records in staging table: %s",
+        db_loader.count_records_in_staging_table(),
+    )
 
 
 def parse_arguments(argv: Optional[List[str]] = None) -> argparse.Namespace:
