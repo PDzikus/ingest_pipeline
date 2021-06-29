@@ -1,0 +1,22 @@
+[sqlfluff]
+dialect = postgres
+templater = jinja
+output_line_length = 120
+runaway_limit = 10
+#disabled rule L031 [avoid table aliases] - aliasing reduces clutter in code
+exclude_rules = L031
+
+[sqlfluff:rules]
+tab_space_size = 4
+max_line_length = 120
+indent_unit = space
+comma_style = leading
+
+[sqlfluff:rules:L010]
+capitalisation_policy = upper
+
+[sqlfluff:rules:L014]
+capitalisation_policy = consistent
+
+[sqlfluff:rules:L030]
+capitalisation_policy = upper

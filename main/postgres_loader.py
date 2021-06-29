@@ -4,7 +4,7 @@ import logging
 from typing import Iterator
 import psycopg2
 
-from model.event import Event
+from models.event import Event
 
 
 class PostgresLoader:

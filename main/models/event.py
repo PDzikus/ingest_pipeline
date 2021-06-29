@@ -1,10 +1,14 @@
-"""Event model class implementation."""
+"""Event models class implementation."""
 from __future__ import annotations
 
 import logging
 import re
 from datetime import datetime, date
 from typing import Any, Dict, Optional
+
+from jinja2 import Environment, PackageLoader
+
+import models
 
 
 class Event:
@@ -43,7 +47,7 @@ class Event:
         except ValueError as error:
             logging.debug(error)
             return None
-        return Event(event_type, event_time, user_email, phone_number, processing_date)
+        return cls(event_type, event_time, user_email, phone_number, processing_date)
 
     @staticmethod
     def _validate_class(value, clazz) -> None:
@@ -117,16 +121,13 @@ class Event:
 
         This method is not connected to schema in any way, if schema changes, this change must be applied manually.
         """
-        return f"""DROP TABLE IF EXISTS {table_name};
-                  CREATE UNLOGGED TABLE {table_name} (
-                      event_type          INTEGER,
-                      event_time          TIMESTAMP,
-                      user_email          TEXT,
-                      phone_number        TEXT,
-                      processing_date     DATE,
-                      PRIMARY KEY (event_type, event_time, user_email, phone_number, processing_date)
-                  );
-                """
+        jinja_env = Environment(
+            loader=PackageLoader(models.__package__, "templates"),
+            trim_blocks=True,
+            autoescape=False,
+        )
+        template = jinja_env.get_template("event_staging_table.sql")
+        return template.render(table_name=table_name)
 
     def __eq__(self, other: Event) -> bool:
         """Two events are equal if all their fields are equal."""

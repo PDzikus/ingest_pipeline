@@ -10,7 +10,7 @@ import json
 import logging
 from json import JSONDecodeError
 from typing import Iterator, Optional
-from model.event import Event
+from models.event import Event
 
 
 class SourceProcessor:

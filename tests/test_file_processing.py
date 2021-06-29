@@ -1,5 +1,5 @@
 """Tests for file processing."""
-from model.event import Event
+from models.event import Event
 from source_processor import SourceProcessor
 from datetime import datetime, date
 

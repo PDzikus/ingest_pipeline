@@ -38,7 +38,5 @@ repos:
     hooks:
       - id: "sqlfluff-fix"
         name: "SQLFluff Formatter"
-        args: [ --dialect, "postgresql"]
       - id: "sqlfluff-lint"
         name: "SQLFluff Linter"
-        args: [ --dialect, "postgresql"]

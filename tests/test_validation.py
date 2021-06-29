@@ -2,7 +2,7 @@
 import json
 from typing import Dict, Any, List
 import pytest
-from model.event import Event
+from models.event import Event
 from datetime import datetime
 
 
