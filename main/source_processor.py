@@ -30,7 +30,7 @@ class SourceProcessor:
                 event = self._process_line(line)
                 if event is None:
                     self.logger.error(
-                        "Incorrect event format in line %s: %s", num, line
+                        "Incorrect event format in line %s: %s", num, line.strip()
                     )
                     self.invalid_records += 1
                     continue
