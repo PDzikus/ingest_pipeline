@@ -1,29 +1,43 @@
-"""Data ingestion endpoint."""
+"""Data ingestion endpoint.
+
+Usage:
+ingest_data --input_file <file_name> [--env <environment_name>]
+
+Environment name should correspond to config file name in main/configs.
+"""
 import argparse
 import logging
 import os
 import sys
 from typing import Optional, List
 
+import configparser
+
 from source_processor import SourceProcessor
 from main.postgres_loader import PostgresLoader
 
+logger = logging.getLogger("Main")
+
 
 def main(argv: Optional[List[str]] = None) -> None:
-    configure_logging()
-    logger = logging.getLogger("Main")
-    args = parse_arguments(argv)
-    validate_args(args)
+    args, config = initialize_context(argv)
 
+    logger.info("Initializing source and db connection.")
     source_processor = SourceProcessor()
     event_iterator = source_processor.iterator_from_file(args.input_file)
     db_loader = PostgresLoader(
-        host="localhost", database="local_db", user="local_user", password="local_pass"
+        host=config.get("Postgres", "host"),
+        database=config.get("Postgres", "database"),
+        user=config.get("Postgres", "user"),
+        password=config.get("Postgres", "password"),
     )
 
-    logger.info("Loading data into PostgreSQL")
+    logger.info("Starting data load into PostgreSQL.")
+
     db_loader.load_data(data_source=event_iterator)
-    logger.info("Finished loading data into PostgresSQL")
+
+    logger.info("Finished data load into PostgresSQL.")
+
     logger.info(
         "Loaded %s valid record(s) from data source.", source_processor.valid_records
     )
@@ -34,6 +48,14 @@ def main(argv: Optional[List[str]] = None) -> None:
     )
 
 
+def initialize_context(argv):
+    configure_logging()
+    args = parse_arguments(argv)
+    validate_args(args)
+    config = load_config(args.environment)
+    return args, config
+
+
 def parse_arguments(argv: Optional[List[str]] = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -42,14 +64,27 @@ def parse_arguments(argv: Optional[List[str]] = None) -> argparse.Namespace:
         required=True,
         help="Path to newline separated json data file",
     )
+    parser.add_argument(
+        "--env",
+        dest="environment",
+        required=False,
+        default="local",
+        help="Environment for config, by default it's set to local",
+    )
     return parser.parse_args(argv)
 
 
 def validate_args(args: argparse.Namespace) -> None:
-    logger = logging.getLogger("Main")
     if not os.path.isfile(args.input_file):
         logger.error("Input file can't be found or accessed: %s", args.input_file)
         raise FileNotFoundError
+
+
+def load_config(env: str) -> configparser.ConfigParser:
+    logger.info("Reading config file for environment: %s", env)
+    parser = configparser.ConfigParser()
+    parser.read(f"configs/config_{env.lower()}.ini")
+    return parser
 
 
 def configure_logging():
