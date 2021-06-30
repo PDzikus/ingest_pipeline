@@ -15,7 +15,7 @@ def invalid_records() -> List[Dict[str, Any]]:
     return records
 
 
-def test_validate_record() -> None:
+def test_valid_record_should_be_mapped_to_event_object() -> None:
     record = {
         "event_type": 1,
         "event_time": "2019-03-10 15:59:08",
@@ -31,6 +31,8 @@ def test_validate_record() -> None:
     assert result.processing_date == datetime(2019, 3, 10).date()
 
 
-def test_invalid_records(invalid_records: List[Dict[str, Any]]) -> None:
+def test_invalid_records_should_be_discarded(
+    invalid_records: List[Dict[str, Any]]
+) -> None:
     for record in invalid_records:
         assert Event.from_json_object(record) is None

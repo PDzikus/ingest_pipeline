@@ -35,7 +35,7 @@ records = [
 ]
 
 
-def test_file_iterator():
+def test_file_iterator_should_load_events_from_file_and_produce_event_objects():
     file_path = "test_data/mixed_data.json"
     source_processor = SourceProcessor()
     file_iterator = source_processor.iterator_from_file(file_path)

@@ -1,9 +1,7 @@
 """Tests for postgres loader."""
-import logging
-
 import pytest
 
-from postgres_loader import PostgresLoader, StringIteratorIO
+from postgres_loader import PostgresLoader
 from source_processor import SourceProcessor
 
 
@@ -26,15 +24,20 @@ def test_create_staging_table_should_sends_create_table_sql(db_connection):
     assert any(loader.table_name in arg for arg in execute_params)
 
 
-def test_string_iterator_io_should_produce_list_of_csv_like_strings():
+def test_load_table_should_run_copy_from_with_string_iterator_producing_csv_like_structure(
+    db_connection,
+):
     file_path = "test_data/mixed_data.json"
     source_processor = SourceProcessor()
     file_iterator = source_processor.iterator_from_file(file_path)
-    data_string_iterator = StringIteratorIO(
-        (event.to_csv_row() for event in file_iterator)
-    )
-    result = list(data_string_iterator)
-    logging.error(result)
+    loader = PostgresLoader("local", "db", "user", "pass")
+    loader.load_data(file_iterator)
+
+    for name, args, _ in db_connection.mock_calls:
+        if name.endswith("copy_from"):
+            string_iterator = args[0]
+    result = list(string_iterator)
+
     assert len(result) == 4
     assert "7|2019-01-04 05:07:26|TAFgZ@gmail.com|0603728764|2019-01-04\n" in result
     assert "6|2018-01-04 22:25:53|RNRKlh@gmail.com|5164649899|2018-01-04\n" in result
