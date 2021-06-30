@@ -11,13 +11,20 @@ class PostgresLoader:
     """Class responsible for PostgreSQL interaction."""
 
     # TODO: initialize based on configuration. Pass shouldn't be in code btw.
-    def __init__(self, host: str, database: str, user: str, password: str):
+    def __init__(self, host: str, port: int, database: str, user: str, password: str):
         self.logger = logging.getLogger(self.__class__.__name__)
         self.table_name = "staging"
         self.connection = psycopg2.connect(
-            host=host, database=database, user=user, password=password
+            host=host, port=port, database=database, user=user, password=password
         )
         self.connection.autocommit = True
+
+    def close_connection(self) -> None:
+        """Closes connection to database."""
+        host = self.connection.get_dsn_parameters()["host"]
+        port = self.connection.get_dsn_parameters()["port"]
+        self.connection.close()
+        self.logger.info("Database connection to %s:%s closed.", host, port)
 
     def create_staging_table(self) -> None:
         """Creates staging table."""

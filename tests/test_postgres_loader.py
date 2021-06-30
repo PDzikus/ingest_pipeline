@@ -12,7 +12,7 @@ def db_connection(mocker):
 
 def test_create_staging_table_should_sends_create_table_sql(db_connection):
     """Checks if any execute sent from this function creates a table."""
-    loader = PostgresLoader("local", "db", "user", "pass")
+    loader = PostgresLoader("local", 5432, "db", "user", "pass")
     loader.create_staging_table()
     execute_params = []
     for name, args, _ in db_connection.mock_calls:
@@ -30,7 +30,7 @@ def test_load_table_should_run_copy_from_with_string_iterator_producing_csv_like
     file_path = "test_data/mixed_data.json"
     source_processor = SourceProcessor()
     file_iterator = source_processor.iterator_from_file(file_path)
-    loader = PostgresLoader("local", "db", "user", "pass")
+    loader = PostgresLoader("local", 5432, "db", "user", "pass")
     loader.load_data(file_iterator)
 
     for name, args, _ in db_connection.mock_calls:

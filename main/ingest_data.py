@@ -25,27 +25,31 @@ def main(argv: Optional[List[str]] = None) -> None:
     logger.info("Initializing source and db connection.")
     source_processor = SourceProcessor()
     event_iterator = source_processor.iterator_from_file(args.input_file)
-    db_loader = PostgresLoader(
-        host=config.get("Postgres", "host"),
-        database=config.get("Postgres", "database"),
-        user=config.get("Postgres", "user"),
-        password=config.get("Postgres", "password"),
-    )
 
     logger.info("Starting data load into PostgreSQL.")
-
-    db_loader.load_data(data_source=event_iterator)
+    db_loader = None
+    records_loaded = 0
+    try:
+        db_loader = PostgresLoader(
+            host=config.get("Postgres", "host"),
+            port=int(config.get("Postgres", "port")),
+            database=config.get("Postgres", "database"),
+            user=config.get("Postgres", "user"),
+            password=config.get("Postgres", "password"),
+        )
+        db_loader.load_data(data_source=event_iterator)
+        records_loaded = db_loader.count_records_in_staging_table()
+    finally:
+        if db_loader is not None:
+            db_loader.close_connection()
 
     logger.info("Finished data load into PostgresSQL.")
 
     logger.info(
-        "Loaded %s valid record(s) from data source.", source_processor.valid_records
+        "Loaded %d valid record(s) from data source.", source_processor.valid_records
     )
-    logger.info("Discarded %s invalid record(s).", source_processor.invalid_records)
-    logger.info(
-        "Count of records in staging table: %s",
-        db_loader.count_records_in_staging_table(),
-    )
+    logger.info("Discarded %d invalid record(s).", source_processor.invalid_records)
+    logger.info("Count of records in staging table: %d", records_loaded)
 
 
 def initialize_context(argv):
