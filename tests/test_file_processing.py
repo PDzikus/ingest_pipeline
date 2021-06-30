@@ -36,7 +36,7 @@ records = [
 
 
 def test_file_iterator():
-    file_path = "testing_data.json"
+    file_path = "test_data/mixed_data.json"
     source_processor = SourceProcessor()
     file_iterator = source_processor.iterator_from_file(file_path)
     output = list(file_iterator)
