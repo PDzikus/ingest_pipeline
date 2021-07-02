@@ -32,3 +32,14 @@ It's also useful to install sqlfluff locally:
 You can use it by specifying mode (lint or fix) and file:
 
 ```sqlfluff fix main/event/templates/staging_table.sql```
+
+## Running the pipeline
+
+Before starting the pipeline you need to have a running postgres instance. Connection parameters should be set in ```main/configs/config_local.ini``` file. 
+In ```bin``` folder you can find scripts setting up and shutting down a docker-compose instance of postgres. You can start them with ```bin/start_local.sh```.
+
+Entry point for pipeline is ```main/ingest_data.py``` script. It requires one parameter:
+
+--input_file <file_name>
+
+Sample file is in data folder, so you can run it with ```python main/ingest_data.py --input_file data/sample_data.json```
